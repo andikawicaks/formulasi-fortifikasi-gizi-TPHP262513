@@ -74,7 +74,7 @@ bahan
 Penjelasan singkat tiap bahan:
 
 | Bahan susu ibu hamil | Peran |
-|------------------------|-----------------------------------------------|
+|----|----|
 | Susu skim bubuk | Sumber protein utama (dan kalsium) |
 | Maltodekstrin | Sumber energi dan sebagai **bahan "pengisi/penyesuai"** |
 | Bubuk lemak nabati | Sumber lemak |
