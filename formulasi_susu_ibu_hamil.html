@@ -1485,15 +1485,16 @@ border-radius: 0px;
 </div>
 
 
-<div id="tujuan-dan-catatan-penting" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Tujuan dan catatan
-penting</h1>
+<div id="tujuan-dan-catatan-penting" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> Tujuan dan catatan
+penting</h2>
 <p>Di materi kuliah, contoh <em>Formulating a Complete Diet</em> memakai
-pakan babi <em>grower-finisher</em>: protein diseimbangkan dulu, lalu
-fosfor, lalu kalsium, lalu protein dikoreksi lagi. Di dokumen ini,
-<strong>logika yang sama</strong> dipakai untuk merancang <strong>susu
-bubuk ibu hamil</strong>.</p>
-<p>Yang akan dipelajari:</p>
+kasus untuk pakan babi <em>grower-finisher</em>, dimana protein
+diseimbangkan terlebih dulu, lalu disusul oleh fosfor, kalsium, dan
+terakhir protein dikoreksi lagi. Pada perhitungan ini, <strong>logika
+yang sama</strong> dipakai untuk merancang <strong>susu bubuk ibu
+hamil</strong>.</p>
+<p>Hal yang akan dipelajari:</p>
 <ol style="list-style-type: decimal">
 <li>Menyusun <strong>spesifikasi</strong> (target zat gizi) dan
 <strong>daftar bahan</strong>.</li>
@@ -1514,17 +1515,18 @@ kepatuhan terhadap regulasi BPOM.</p>
 </blockquote>
 <p><strong>Cara pakai:</strong> jalankan setiap <em>chunk</em> secara
 berurutan (tombol ▶ di RStudio), baca penjelasannya, lalu cocokkan
-hasilnya dengan hitungan manual di kertas. Dokumen ini hanya memakai R
-dasar dan paket <code>knitr</code>.</p>
+hasilnya dengan hitungan manual di kertas. Dokumen ini hanya memakai
+<em>library base</em> R dan <em>library</em> <code>knitr</code>.</p>
 </div>
-<div id="langkah-0-data-bahan-dan-target" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Langkah 0: Data bahan
-dan target</h1>
-<div id="komposisi-bahan" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Komposisi bahan</h2>
-<p>Semua angka dalam <strong>gram per 100 g bahan, basis basah
-(<em>as-is</em>)</strong>, kecuali dinyatakan lain. Ini sama seperti
-tabel komposisi di slide (jagung 8,8% CP, dsb.).</p>
+<div id="langkah-0-data-bahan-dan-target" class="section level2" number="2">
+<h2><span class="header-section-number">2</span> Langkah 0: Data bahan
+dan target</h2>
+<div id="komposisi-bahan" class="section level3" number="2.1">
+<h3><span class="header-section-number">2.1</span> Komposisi bahan</h3>
+<p>Masukkan semua angka dalam <strong>gram per 100 g bahan, basis
+basah</strong>, kecuali dinyatakan lain. Dalam contoh kasus ini, susu
+bubuk ibu hamil yang akan dibuat menggunakan 7 buah bahan sesuai dengan
+data <code>nama</code>.</p>
 <pre class="r"><code>bahan &lt;- data.frame(
   kode    = c(&quot;skim&quot;, &quot;malto&quot;, &quot;lemak&quot;, &quot;caco3&quot;, &quot;fos&quot;, &quot;dha&quot;, &quot;premix&quot;),
   nama    = c(&quot;Susu skim bubuk&quot;, &quot;Maltodekstrin&quot;, &quot;Bubuk lemak nabati (70% lemak)&quot;,
@@ -1646,60 +1648,53 @@ bahan</code></pre>
 </tbody>
 </table>
 </div>
-<p>Penjelasan singkat tiap bahan dan padanannya di contoh pakan
-babi:</p>
+<p>Penjelasan singkat tiap bahan:</p>
 <table>
 <colgroup>
 <col width="33%" />
-<col width="33%" />
-<col width="33%" />
+<col width="66%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Bahan susu ibu hamil</th>
 <th>Peran</th>
-<th>Padanan di contoh pakan babi</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Susu skim bubuk</td>
 <td>Sumber protein utama (dan kalsium)</td>
-<td><em>Soybean meal</em> (SBM)</td>
 </tr>
 <tr class="even">
 <td>Maltodekstrin</td>
-<td>Sumber energi, <strong>bahan “pengisi/penyesuai”</strong></td>
-<td>Jagung (<em>corn</em>)</td>
+<td>Sumber energi dan sebagai <strong>bahan
+“pengisi/penyesuai”</strong></td>
 </tr>
 <tr class="odd">
 <td>Bubuk lemak nabati</td>
 <td>Sumber lemak</td>
-<td>(tidak ada di contoh babi)</td>
 </tr>
 <tr class="even">
 <td>Kalsium karbonat</td>
 <td>Sumber kalsium murni</td>
-<td><em>Limestone</em> (Lime)</td>
 </tr>
 <tr class="odd">
 <td>FOS-inulin, bubuk DHA, premix</td>
 <td><strong>Bahan tetap</strong> dengan jumlah yang sudah
 diputuskan</td>
-<td>Alfalfa 5%, garam, premix TM &amp; Vit</td>
 </tr>
 </tbody>
 </table>
-<p>Maltodekstrin berperan seperti jagung di contoh babi: setiap kali
+<p>Maltodekstrin berperan seperti jagung pada pakan babi: setiap kali
 bahan lain ditambah, <strong>maltodekstrin yang dikurangi</strong>
 supaya total tetap 100 g.</p>
 <p>Asumsi yang sama seperti di buku: <strong>premix dianggap tidak
 menyumbang protein, lemak, maupun kalsium</strong> (kontribusinya
 terlalu kecil). Isi premix dirancang terpisah di bagian terakhir.</p>
 </div>
-<div id="target-spesifikasi" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Target
-spesifikasi</h2>
+<div id="target-spesifikasi" class="section level3" number="2.2">
+<h3><span class="header-section-number">2.2</span> Target
+spesifikasi</h3>
 <p>Target per <strong>100 g bubuk</strong> (basis basah):</p>
 <pre class="r"><code>target &lt;- c(protein = 22,   # g/100 g
             lemak   = 8,    # g/100 g
@@ -1708,9 +1703,9 @@ target</code></pre>
 <pre><code>#&gt; protein   lemak      Ca 
 #&gt;    22.0     8.0     1.1</code></pre>
 </div>
-<div id="bahan-tetap-fixed-ingredients" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Bahan tetap
-(<em>fixed ingredients</em>)</h2>
+<div id="bahan-tetap-fixed-ingredients" class="section level3" number="2.3">
+<h3><span class="header-section-number">2.3</span> Bahan tetap
+(<em>fixed ingredients</em>)</h3>
 <pre class="r"><code>tetap &lt;- c(fos = 3, dha = 1, premix = 1)   # g per 100 g formula
 sisa  &lt;- 100 - sum(tetap)
 sisa</code></pre>
@@ -1718,13 +1713,8 @@ sisa</code></pre>
 <p><strong>Maksudnya:</strong> jumlah FOS-inulin, bubuk DHA, dan premix
 sudah diputuskan di awal (misalnya berdasarkan dosis prebiotik dan
 target DHA). Jadi hanya <strong>95 g</strong> yang tersisa untuk dibagi
-ke susu skim, maltodekstrin, bubuk lemak, dan kalsium karbonat. Di
-contoh babi, ini sama dengan “100% − 5% alfalfa − 1,6% garam &amp;
-premix = 93,4”.</p>
-</div>
-<div id="fungsi-bantu-menghitung-isi-gizi-sebuah-resep" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> Fungsi bantu:
-menghitung isi gizi sebuah resep</h2>
+ke susu skim, maltodekstrin, bubuk lemak, dan kalsium karbonat.</p>
+<p>Fungsi untuk menghitung isi gizi sebuah resep</p>
 <pre class="r"><code># resep: vektor bernama, satuan g bahan per 100 g formula
 hitung_gizi &lt;- function(resep, kolom = c(&quot;air&quot;, &quot;protein&quot;, &quot;lemak&quot;, &quot;karbo&quot;, &quot;serat&quot;, &quot;Ca&quot;)) {
   komposisi &lt;- as.matrix(bahan[names(resep), kolom])
@@ -1732,18 +1722,19 @@ hitung_gizi &lt;- function(resep, kolom = c(&quot;air&quot;, &quot;protein&quot;
 }</code></pre>
 <p><strong>Maksudnya:</strong> untuk setiap zat gizi, kontribusi sebuah
 bahan = <em>jumlah bahan × kadar zat gizi bahan ÷ 100</em>. Semua
-kontribusi lalu dijumlahkan. Ini sama persis dengan baris <em>Check</em>
-di slide, misalnya
-<code>0.088 (81.688) + 0.509 (11.712) + ...</code>.</p>
+kontribusi lalu dijumlahkan.</p>
 </div>
 </div>
-<div id="langkah-1-seimbangkan-protein" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Langkah 1: Seimbangkan
-protein</h1>
-<p>Mula-mula hanya susu skim (x) dan maltodekstrin (sisanya) yang
-dipakai.</p>
+<div id="langkah-1-seimbangkan-protein" class="section level2" number="3">
+<h2><span class="header-section-number">3</span> Langkah 1: Seimbangkan
+protein</h2>
+<p>Pertama-tama, hitung kebutuhan susu skim (x) dan maltodekstrin yang
+akan dipakai untuk susu ibu hamil. Jika 22 gram protein yang
+dikehendaki, dari DHA dengan kandungan 10% protein dan skim dengan
+kandungan 34%, maka sisa malto yang dibutuhkan dapat dihitung dengan
+persamaan ini.</p>
 <p><span class="math display">\[\underbrace{0{,}10(1)}_{\text{DHA}} +
-\underbrace{0{,}34\,x}_{\text{skim}} + \underbrace{0\,(95 -
+\underbrace{0{,}34\,x}_{\text{skim}} + \underbrace{0\,(95-
 x)}_{\text{malto}} = 22\]</span></p>
 <pre class="r"><code>protein_tetap &lt;- 0.10 * tetap[&quot;dha&quot;]              # protein dari bahan tetap
 skim  &lt;- (target[&quot;protein&quot;] - protein_tetap) / 0.34
@@ -1758,16 +1749,15 @@ round(resep1, 3)</code></pre>
 #&gt;   4.286  22.000   1.094  62.953   2.850   0.805</code></pre>
 <p><strong>Maksudnya:</strong> protein diseimbangkan pertama karena susu
 skim adalah bahan dengan porsi terbesar dan protein adalah zat gizi
-“utama” (di pakan ternak, protein juga yang paling mahal). Maltodekstrin
-tidak mengandung protein, sehingga persamaannya jadi sangat
-sederhana.</p>
-<p>Hasil <em>check</em>: protein tepat <strong>22 g</strong>, tetapi
-lemak dan kalsium belum mencapai target. Itu memang belum diurus.</p>
-<div id="sampingan-cek-dengan-pearson-square" class="section level3" number="3.0.1">
-<h3><span class="header-section-number">3.0.1</span> Sampingan: cek
-dengan Pearson Square</h3>
-<p>Untuk porsi 95 g yang dibagi antara susu skim dan maltodekstrin,
-kadar protein yang dibutuhkan campuran keduanya adalah:</p>
+utama. Maltodekstrin tidak mengandung protein, sehingga persamaannya
+jadi sangat sederhana.</p>
+<p>Hasil <em>check</em>: skim yang dibutuhkan adalah 64.412 g dengan
+maltodektrin sebanyak 30.588 g untuk mencapai protein <strong>22
+g</strong>. Meskipun demikian, lemak dan kalsium masih belum mencapai
+target.</p>
+<div id="sampingan-cek-dengan-pearson-square" class="section level4" number="3.0.1">
+<h4><span class="header-section-number">3.0.1</span> Sampingan: cek
+dengan Pearson Square</h4>
 <pre class="r"><code>kadar_perlu &lt;- (target[&quot;protein&quot;] - protein_tetap) / sisa * 100   # % protein campuran
 bagian_skim  &lt;- abs(kadar_perlu - 0)    # selisih dengan maltodekstrin (0%)
 bagian_malto &lt;- abs(34 - kadar_perlu)   # selisih dengan susu skim (34%)
@@ -1780,9 +1770,9 @@ c(kadar_perlu = unname(kadar_perlu),
 Pearson Square hanyalah dua cara menulis perhitungan yang sama.</p>
 </div>
 </div>
-<div id="langkah-2-seimbangkan-lemak" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Langkah 2: Seimbangkan
-lemak</h1>
+<div id="langkah-2-seimbangkan-lemak" class="section level2" number="4">
+<h2><span class="header-section-number">4</span> Langkah 2: Seimbangkan
+lemak</h2>
 <p>Bubuk lemak (y) ditambahkan dan <strong>maltodekstrin
 dikurangi</strong> sebanyak y.</p>
 <p><span class="math display">\[0{,}45(1) + 0{,}01(\text{skim}) +
@@ -1806,9 +1796,9 @@ sudah tepat 8, tetapi <strong>protein naik sedikit di atas 22</strong>,
 karena bubuk lemak juga mengandung 3% protein (dari kaseinat
 pembawanya). Ini akan dikoreksi di langkah 4.</p>
 </div>
-<div id="langkah-3-seimbangkan-kalsium" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Langkah 3: Seimbangkan
-kalsium</h1>
+<div id="langkah-3-seimbangkan-kalsium" class="section level2" number="5">
+<h2><span class="header-section-number">5</span> Langkah 3: Seimbangkan
+kalsium</h2>
 <p>Kalsium karbonat (z) ditambahkan dan maltodekstrin dikurangi
 lagi.</p>
 <p><span class="math display">\[0{,}0125(\text{skim}) +
@@ -1834,9 +1824,9 @@ protein dan lemak yang sudah pas. Di contoh babi, urutannya fosfor dulu
 ada bahan yang menyumbang keduanya, jadi cukup satu langkah untuk
 mineral.</p>
 </div>
-<div id="langkah-4-seimbangkan-ulang-protein" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Langkah 4: Seimbangkan
-ulang protein</h1>
+<div id="langkah-4-seimbangkan-ulang-protein" class="section level2" number="6">
+<h2><span class="header-section-number">6</span> Langkah 4: Seimbangkan
+ulang protein</h2>
 <p>Sekarang jumlah bubuk lemak dan CaCO₃ sudah “dikunci”. Protein
 dihitung ulang dengan memperhitungkan protein dari bubuk lemak. Ruang
 untuk susu skim + maltodekstrin menjadi lebih kecil:</p>
@@ -1850,13 +1840,10 @@ resep4 &lt;- c(skim = unname(skim), malto = unname(malto),
 round(resep4, 3)</code></pre>
 <pre><code>#&gt;   skim  malto  lemak  caco3    fos    dha premix 
 #&gt; 63.541 20.861  9.866  0.732  3.000  1.000  1.000</code></pre>
-<p><strong>Maksudnya:</strong> langkah ini sama dengan <em>Step 4</em>
-di slide (“SBM = x &amp; Corn = 92,16 − x”). Protein kembali tepat 22
-g.</p>
 </div>
-<div id="cek-akhir-kenapa-lemak-dan-kalsium-sedikit-meleset" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Cek akhir: kenapa lemak
-dan kalsium sedikit meleset?</h1>
+<div id="cek-akhir-kenapa-lemak-dan-kalsium-sedikit-meleset" class="section level2" number="7">
+<h2><span class="header-section-number">7</span> Cek akhir: kenapa lemak
+dan kalsium sedikit meleset?</h2>
 <pre class="r"><code>cek &lt;- function(resep) {
   hasil &lt;- hitung_gizi(resep)[names(target)]
   data.frame(zat_gizi = names(target), target = unname(target),
@@ -1905,9 +1892,9 @@ seperti ini biasanya dibiarkan karena masih dalam batas toleransi. Ada
 dua cara untuk mendapatkan jawaban yang tepat: mengulang langkah 1–4
 sampai stabil (iterasi), atau menyelesaikan semuanya sekaligus sebagai
 sistem persamaan.</p>
-<div id="cara-a-iterasi-ulangi-langkah-sampai-stabil" class="section level2" number="7.1">
-<h2><span class="header-section-number">7.1</span> Cara A: iterasi
-(ulangi langkah sampai stabil)</h2>
+<div id="cara-a-iterasi-ulangi-langkah-sampai-stabil" class="section level3" number="7.1">
+<h3><span class="header-section-number">7.1</span> Cara A: iterasi
+(ulangi langkah sampai stabil)</h3>
 <pre class="r"><code>iterasi &lt;- function(maks = 50, toleransi = 1e-8) {
   lemak_b &lt;- 0; caco3_b &lt;- 0
   for (i in 1:maks) {
@@ -1969,9 +1956,9 @@ hasil_iterasi$putaran</code></pre>
 terus. Karena pengaruh silangnya kecil, hasilnya cepat stabil dalam
 beberapa putaran saja, dan semua target tercapai tepat.</p>
 </div>
-<div id="cara-b-selesaikan-sekaligus-sebagai-sistem-persamaan-linear" class="section level2" number="7.2">
-<h2><span class="header-section-number">7.2</span> Cara B: selesaikan
-sekaligus sebagai sistem persamaan linear</h2>
+<div id="cara-b-selesaikan-sekaligus-sebagai-sistem-persamaan-linear" class="section level3" number="7.2">
+<h3><span class="header-section-number">7.2</span> Cara B: selesaikan
+sekaligus sebagai sistem persamaan linear</h3>
 <p>Ada 4 bahan yang belum diketahui (skim, malto, lemak, CaCO₃) dan 4
 syarat:</p>
 <ol style="list-style-type: decimal">
@@ -2045,14 +2032,16 @@ berikutnya adalah kadar protein, lemak, dan Ca setiap bahan (dalam
 desimal). Vektor <strong>b</strong> adalah target dikurangi sumbangan
 bahan tetap. Hasilnya <strong>sama dengan cara iterasi</strong>. Metode
 bertahap di slide sebenarnya adalah cara manual untuk menyelesaikan
-sistem persamaan ini. Software formulasi (termasuk Excel Solver)
-mengerjakan hal yang sama, dan biasanya ditambah tujuan meminimalkan
-harga (<em>linear programming</em>).</p>
+sistem persamaan ini. Software formulasi (seperti Excel Solver) dapat
+mengerjakan hal yang sama, dan biasanya ditambah tujuan untuk
+meminimalkan harga (<em>linear programming</em>). Lakukan dengan Excel
+Solver pada file <code>formulasi_susu_ibu_hamil.xlsx</code> dan
+bandingkan hasilnya.</p>
 </div>
 </div>
-<div id="resep-akhir-dan-nilai-gizi-lengkap" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Resep akhir dan nilai
-gizi lengkap</h1>
+<div id="resep-akhir-dan-nilai-gizi-lengkap" class="section level2" number="8">
+<h2><span class="header-section-number">8</span> Resep akhir dan nilai
+gizi lengkap</h2>
 <pre class="r"><code>resep_tabel &lt;- data.frame(
   bahan = bahan[names(resep_final), &quot;nama&quot;],
   g_per_100g = round(unname(resep_final), 2)
@@ -2153,9 +2142,9 @@ data.frame(
 (protein dan karbohidrat 4 kkal/g, lemak 9 kkal/g). FOS-inulin dihitung
 2 kkal/g karena hanya sebagian energinya diperoleh lewat fermentasi di
 usus besar.</p>
-<div id="konversi-ke-basis-kering" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> Konversi ke basis
-kering</h2>
+<div id="konversi-ke-basis-kering" class="section level3" number="8.1">
+<h3><span class="header-section-number">8.1</span> Konversi ke basis
+kering</h3>
 <pre class="r"><code>BK &lt;- 100 - gizi[&quot;air&quot;]                  # % bahan kering formula
 gizi_bk &lt;- gizi[c(&quot;protein&quot;, &quot;lemak&quot;, &quot;Ca&quot;)] / (BK / 100)
 c(bahan_kering_persen = unname(BK))</code></pre>
@@ -2174,8 +2163,8 @@ diukur langsung. Sesuai <em>rule of thumb</em>, dari basis basah ke
 basis kering <strong>kadar zat gizi naik</strong>.</p>
 </div>
 </div>
-<div id="takaran-saji" class="section level1" number="9">
-<h1><span class="header-section-number">9</span> Takaran saji</h1>
+<div id="takaran-saji" class="section level2" number="9">
+<h2><span class="header-section-number">9</span> Takaran saji</h2>
 <p>Misalkan satu takaran saji adalah <strong>45 g bubuk</strong>
 (dilarutkan dalam ±200 mL air), diminum <strong>2 kali
 sehari</strong>.</p>
@@ -2196,9 +2185,9 @@ berapa persen kebutuhan yang dipenuhi formula. Gunakan tabel AKG terbaru
 dirancang sebagai <strong>pelengkap</strong>, bukan untuk memenuhi 100%
 kebutuhan.</p>
 </div>
-<div id="merancang-premix-vitamin-mineral" class="section level1" number="10">
-<h1><span class="header-section-number">10</span> Merancang premix
-vitamin-mineral</h1>
+<div id="merancang-premix-vitamin-mineral" class="section level2" number="10">
+<h2><span class="header-section-number">10</span> Merancang premix
+vitamin-mineral</h2>
 <p>Premix sudah “dipesan” 1 g per 100 g formula. Sekarang isinya
 dirancang, mengikuti bagian <em>Formulating a TM or Vit premix</em> di
 buku Chiba: tentukan kebutuhan, perhitungkan kemurnian sumber, lalu
@@ -2319,9 +2308,9 @@ retinol, karena asupan retinol berlebih saat hamil berisiko teratogenik.
 Kalau ingin ditambahkan, lebih aman dalam bentuk beta-karoten.</li>
 </ul>
 </div>
-<div id="latihan-untuk-mahasiswa" class="section level1" number="11">
-<h1><span class="header-section-number">11</span> Latihan untuk
-mahasiswa</h1>
+<div id="latihan-untuk-mahasiswa" class="section level2" number="11">
+<h2><span class="header-section-number">11</span> Latihan untuk
+mahasiswa</h2>
 <ol style="list-style-type: decimal">
 <li>Ubah target protein menjadi <strong>25 g/100 g</strong>. Jalankan
 ulang semua <em>chunk</em>. Bahan apa yang naik dan apa yang turun?
@@ -2339,9 +2328,9 @@ hitung biaya bahan per kg formula. Diskusikan: bagaimana jika ingin
 formula termurah yang tetap memenuhi semua target?</li>
 </ol>
 </div>
-<div id="keterbatasan-pendekatan-ini" class="section level1" number="12">
-<h1><span class="header-section-number">12</span> Keterbatasan
-pendekatan ini</h1>
+<div id="keterbatasan-pendekatan-ini" class="section level2" number="12">
+<h2><span class="header-section-number">12</span> Keterbatasan
+pendekatan ini</h2>
 <ul>
 <li>Pendekatan ini hanya menjamin <strong>angka gizi di atas
 kertas</strong>. Formula sungguhan juga harus mempertimbangkan
@@ -2356,8 +2345,8 @@ pangan olahan keperluan gizi khusus, termasuk batas cemaran dan
 persyaratan label.</li>
 </ul>
 </div>
-<div id="rujukan" class="section level1" number="13">
-<h1><span class="header-section-number">13</span> Rujukan</h1>
+<div id="rujukan" class="section level2" number="13">
+<h2><span class="header-section-number">13</span> Rujukan</h2>
 <p>Chiba, L. I. (2009). <em>Animal Nutrition Handbook</em>, Section 18:
 Diet Formulation &amp; Feed Ingredients (hlm. 481–491). Auburn
 University.</p>

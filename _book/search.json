@@ -1,0 +1,92 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "",
+    "text": "Pendahuluan\nPetunjuk ini berisi contoh formulasi susu ibu hamil dengan pendekatan complete diet bertahap, diadaptasi dari metode formulasi pakan (Chiba, Animal Nutrition Handbook, Section 18).\nJalankan setiap chunk secara berurutan dan cocokkan hasilnya dengan hitungan manual.",
+    "crumbs": [
+      "Pendahuluan"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html",
+    "href": "formulasi_susu_ibu_hamil.html",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "",
+    "text": "2 Tujuan dan catatan penting\nDi materi kuliah, contoh Formulating a Complete Diet memakai pakan babi grower-finisher: protein diseimbangkan dulu, lalu fosfor, lalu kalsium, lalu protein dikoreksi lagi. Di dokumen ini, logika yang sama dipakai untuk merancang susu bubuk ibu hamil.\nYang akan dipelajari:\nCara pakai: jalankan setiap chunk secara berurutan (tombol ▶ di RStudio), baca penjelasannya, lalu cocokkan hasilnya dengan hitungan manual di kertas. Dokumen ini hanya memakai R dasar dan paket knitr.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html#komposisi-bahan",
+    "href": "formulasi_susu_ibu_hamil.html#komposisi-bahan",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "3.1 Komposisi bahan",
+    "text": "3.1 Komposisi bahan\nSemua angka dalam gram per 100 g bahan, basis basah (as-is), kecuali dinyatakan lain. Ini sama seperti tabel komposisi di slide (jagung 8,8% CP, dsb.).\n\nbahan &lt;- data.frame(\n  kode    = c(\"skim\", \"malto\", \"lemak\", \"caco3\", \"fos\", \"dha\", \"premix\"),\n  nama    = c(\"Susu skim bubuk\", \"Maltodekstrin\", \"Bubuk lemak nabati (70% lemak)\",\n              \"Kalsium karbonat\", \"FOS-inulin\", \"Bubuk DHA (mikroenkapsulasi)\",\n              \"Premix vitamin-mineral\"),\n  air     = c(4,    5,  2,    0,  5,  3, 0),\n  protein = c(34,   0,  3,    0,  0, 10, 0),\n  lemak   = c(1,    0,  70,   0,  0, 45, 0),\n  karbo   = c(52,   95, 23,   0,  0, 40, 0),   # karbohidrat tercerna (laktosa, dll.)\n  serat   = c(0,    0,  0,    0, 95,  0, 0),   # serat pangan (FOS-inulin)\n  Ca      = c(1.25, 0,  0.02, 40, 0,  0, 0)    # g Ca per 100 g bahan\n)\nrownames(bahan) &lt;- bahan$kode\nbahan\n\n\n  \n\n\n\nPenjelasan singkat tiap bahan dan padanannya di contoh pakan babi:\n\n\n\n\n\n\n\n\nBahan susu ibu hamil\nPeran\nPadanan di contoh pakan babi\n\n\n\n\nSusu skim bubuk\nSumber protein utama (dan kalsium)\nSoybean meal (SBM)\n\n\nMaltodekstrin\nSumber energi, bahan “pengisi/penyesuai”\nJagung (corn)\n\n\nBubuk lemak nabati\nSumber lemak\n(tidak ada di contoh babi)\n\n\nKalsium karbonat\nSumber kalsium murni\nLimestone (Lime)\n\n\nFOS-inulin, bubuk DHA, premix\nBahan tetap dengan jumlah yang sudah diputuskan\nAlfalfa 5%, garam, premix TM & Vit\n\n\n\nMaltodekstrin berperan seperti jagung di contoh babi: setiap kali bahan lain ditambah, maltodekstrin yang dikurangi supaya total tetap 100 g.\nAsumsi yang sama seperti di buku: premix dianggap tidak menyumbang protein, lemak, maupun kalsium (kontribusinya terlalu kecil). Isi premix dirancang terpisah di bagian terakhir.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html#target-spesifikasi",
+    "href": "formulasi_susu_ibu_hamil.html#target-spesifikasi",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "3.2 Target spesifikasi",
+    "text": "3.2 Target spesifikasi\nTarget per 100 g bubuk (basis basah):\n\ntarget &lt;- c(protein = 22,   # g/100 g\n            lemak   = 8,    # g/100 g\n            Ca      = 1.1)  # g/100 g  (= 1.100 mg/100 g)\ntarget\n\n#&gt; protein   lemak      Ca \n#&gt;    22.0     8.0     1.1",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html#bahan-tetap-fixed-ingredients",
+    "href": "formulasi_susu_ibu_hamil.html#bahan-tetap-fixed-ingredients",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "3.3 Bahan tetap (fixed ingredients)",
+    "text": "3.3 Bahan tetap (fixed ingredients)\n\ntetap &lt;- c(fos = 3, dha = 1, premix = 1)   # g per 100 g formula\nsisa  &lt;- 100 - sum(tetap)\nsisa\n\n#&gt; [1] 95\n\n\nMaksudnya: jumlah FOS-inulin, bubuk DHA, dan premix sudah diputuskan di awal (misalnya berdasarkan dosis prebiotik dan target DHA). Jadi hanya 95 g yang tersisa untuk dibagi ke susu skim, maltodekstrin, bubuk lemak, dan kalsium karbonat. Di contoh babi, ini sama dengan “100% − 5% alfalfa − 1,6% garam & premix = 93,4”.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html#fungsi-bantu-menghitung-isi-gizi-sebuah-resep",
+    "href": "formulasi_susu_ibu_hamil.html#fungsi-bantu-menghitung-isi-gizi-sebuah-resep",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "3.4 Fungsi bantu: menghitung isi gizi sebuah resep",
+    "text": "3.4 Fungsi bantu: menghitung isi gizi sebuah resep\n\n# resep: vektor bernama, satuan g bahan per 100 g formula\nhitung_gizi &lt;- function(resep, kolom = c(\"air\", \"protein\", \"lemak\", \"karbo\", \"serat\", \"Ca\")) {\n  komposisi &lt;- as.matrix(bahan[names(resep), kolom])\n  colSums(komposisi * resep / 100)   # gram zat gizi per 100 g formula\n}\n\nMaksudnya: untuk setiap zat gizi, kontribusi sebuah bahan = jumlah bahan × kadar zat gizi bahan ÷ 100. Semua kontribusi lalu dijumlahkan. Ini sama persis dengan baris Check di slide, misalnya 0.088 (81.688) + 0.509 (11.712) + ....",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html#cara-a-iterasi-ulangi-langkah-sampai-stabil",
+    "href": "formulasi_susu_ibu_hamil.html#cara-a-iterasi-ulangi-langkah-sampai-stabil",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "8.1 Cara A: iterasi (ulangi langkah sampai stabil)",
+    "text": "8.1 Cara A: iterasi (ulangi langkah sampai stabil)\n\niterasi &lt;- function(maks = 50, toleransi = 1e-8) {\n  lemak_b &lt;- 0; caco3_b &lt;- 0\n  for (i in 1:maks) {\n    # Langkah protein\n    skim &lt;- (target[\"protein\"] - 0.10 * tetap[\"dha\"] - 0.03 * lemak_b) / 0.34\n    # Langkah lemak\n    lemak_baru &lt;- (target[\"lemak\"] - 0.45 * tetap[\"dha\"] - 0.01 * skim) / 0.70\n    # Langkah kalsium\n    caco3_baru &lt;- (target[\"Ca\"] - 0.0125 * skim - 0.0002 * lemak_baru) / 0.40\n    berubah &lt;- abs(lemak_baru - lemak_b) + abs(caco3_baru - caco3_b)\n    lemak_b &lt;- lemak_baru; caco3_b &lt;- caco3_baru\n    if (berubah &lt; toleransi) break\n  }\n  malto &lt;- sisa - skim - lemak_b - caco3_b\n  list(putaran = i,\n       resep = c(skim = unname(skim), malto = unname(malto),\n                 lemak = unname(lemak_b), caco3 = unname(caco3_b), tetap))\n}\nhasil_iterasi &lt;- iterasi()\nhasil_iterasi$putaran\n\n#&gt; [1] 5\n\nround(hasil_iterasi$resep, 4)\n\n#&gt;    skim   malto   lemak   caco3     fos     dha  premix \n#&gt; 63.5402 20.8224  9.8780  0.7594  3.0000  1.0000  1.0000\n\ncek(hasil_iterasi$resep)\n\n\n  \n\n\n\nMaksudnya: langkah protein → lemak → kalsium diulang terus. Karena pengaruh silangnya kecil, hasilnya cepat stabil dalam beberapa putaran saja, dan semua target tercapai tepat.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html#cara-b-selesaikan-sekaligus-sebagai-sistem-persamaan-linear",
+    "href": "formulasi_susu_ibu_hamil.html#cara-b-selesaikan-sekaligus-sebagai-sistem-persamaan-linear",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "8.2 Cara B: selesaikan sekaligus sebagai sistem persamaan linear",
+    "text": "8.2 Cara B: selesaikan sekaligus sebagai sistem persamaan linear\nAda 4 bahan yang belum diketahui (skim, malto, lemak, CaCO₃) dan 4 syarat:\n\nTotal keempatnya = 95 g\nProtein total = 22 g\nLemak total = 8 g\nKalsium total = 1,1 g\n\nEmpat persamaan dengan empat variabel bisa diselesaikan langsung dengan aljabar matriks (A · x = b):\n\nvar_bebas &lt;- c(\"skim\", \"malto\", \"lemak\", \"caco3\")\nzat &lt;- c(\"protein\", \"lemak\", \"Ca\")\n\nA &lt;- rbind(total = rep(1, length(var_bebas)),\n           t(as.matrix(bahan[var_bebas, zat])) / 100)\ncolnames(A) &lt;- var_bebas\n\nkontribusi_tetap &lt;- hitung_gizi(tetap, kolom = zat)\nb &lt;- c(total = sisa, target[zat] - kontribusi_tetap)\n\nA\n\n#&gt;           skim malto lemak caco3\n#&gt; total   1.0000     1 1e+00   1.0\n#&gt; protein 0.3400     0 3e-02   0.0\n#&gt; lemak   0.0100     0 7e-01   0.0\n#&gt; Ca      0.0125     0 2e-04   0.4\n\nb\n\n#&gt;   total protein   lemak      Ca \n#&gt;   95.00   21.90    7.55    1.10\n\nsolusi &lt;- solve(A, b)\nresep_final &lt;- c(solusi, tetap)\nround(resep_final, 4)\n\n#&gt;    skim   malto   lemak   caco3     fos     dha  premix \n#&gt; 63.5402 20.8224  9.8780  0.7594  3.0000  1.0000  1.0000\n\ncek(resep_final)\n\n\n  \n\n\n\nMaksudnya: baris pertama matriks A adalah syarat total berat (koefisien 1 untuk setiap bahan). Baris berikutnya adalah kadar protein, lemak, dan Ca setiap bahan (dalam desimal). Vektor b adalah target dikurangi sumbangan bahan tetap. Hasilnya sama dengan cara iterasi. Metode bertahap di slide sebenarnya adalah cara manual untuk menyelesaikan sistem persamaan ini. Software formulasi (termasuk Excel Solver) mengerjakan hal yang sama, dan biasanya ditambah tujuan meminimalkan harga (linear programming).",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  },
+  {
+    "objectID": "formulasi_susu_ibu_hamil.html#konversi-ke-basis-kering",
+    "href": "formulasi_susu_ibu_hamil.html#konversi-ke-basis-kering",
+    "title": "1  Formulasi Susu Ibu Hamil: Pendekatan Complete Diet Bertahap",
+    "section": "9.1 Konversi ke basis kering",
+    "text": "9.1 Konversi ke basis kering\n\nBK &lt;- 100 - gizi[\"air\"]                  # % bahan kering formula\ngizi_bk &lt;- gizi[c(\"protein\", \"lemak\", \"Ca\")] / (BK / 100)\nc(bahan_kering_persen = unname(BK))\n\n#&gt; bahan_kering_persen \n#&gt;             96.0397\n\nround(rbind(basis_basah = gizi[c(\"protein\", \"lemak\", \"Ca\")],\n            basis_kering = gizi_bk), 3)\n\n#&gt;              protein lemak    Ca\n#&gt; basis_basah   22.000  8.00 1.100\n#&gt; basis_kering  22.907  8.33 1.145\n\n\nMaksudnya: susu bubuk sangat kering (bahan kering ±96%), jadi basis basah dan basis kering hanya sedikit berbeda. Inilah alasan asumsi 90% bahan kering dari formulasi pakan tidak cocok untuk susu bubuk: kadar air sebaiknya diukur langsung. Sesuai rule of thumb, dari basis basah ke basis kering kadar zat gizi naik.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap</span>"
+    ]
+  }
+]

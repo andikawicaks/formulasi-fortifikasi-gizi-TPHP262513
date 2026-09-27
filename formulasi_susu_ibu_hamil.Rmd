@@ -7,6 +7,9 @@ output:
     toc_float: true
     number_sections: true
     df_print: kable
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include = FALSE}
@@ -14,37 +17,42 @@ knitr::opts_chunk$set(echo = TRUE, comment = "#>")
 options(digits = 6)
 ```
 
-# Tujuan dan catatan penting
+## Tujuan dan catatan penting
 
-Di materi kuliah, contoh *Formulating a Complete Diet* memakai pakan babi
-*grower-finisher*: protein diseimbangkan dulu, lalu fosfor, lalu kalsium, lalu
-protein dikoreksi lagi. Di dokumen ini, **logika yang sama** dipakai untuk
+Di materi kuliah, contoh *Formulating a Complete Diet* memakai kasus
+untuk pakan babi *grower-finisher*, dimana protein diseimbangkan
+terlebih dulu, lalu disusul oleh fosfor, kalsium, dan terakhir protein
+dikoreksi lagi. Pada perhitungan ini, **logika yang sama** dipakai untuk
 merancang **susu bubuk ibu hamil**.
 
-Yang akan dipelajari:
+Hal yang akan dipelajari:
 
-1. Menyusun **spesifikasi** (target zat gizi) dan **daftar bahan**.
-2. Menyeimbangkan zat gizi **satu per satu** dengan persamaan aljabar satu variabel.
-3. Memahami kenapa perlu **koreksi ulang**, dan bagaimana **iterasi** atau
-   **sistem persamaan linear** menyelesaikannya sekaligus.
-4. Menghitung nilai gizi lengkap, basis kering, takaran saji, dan **premix** vitamin-mineral.
+1.  Menyusun **spesifikasi** (target zat gizi) dan **daftar bahan**.
+2.  Menyeimbangkan zat gizi **satu per satu** dengan persamaan aljabar
+    satu variabel.
+3.  Memahami kenapa perlu **koreksi ulang**, dan bagaimana **iterasi**
+    atau **sistem persamaan linear** menyelesaikannya sekaligus.
+4.  Menghitung nilai gizi lengkap, basis kering, takaran saji, dan
+    **premix** vitamin-mineral.
 
-> **Penting:** Semua angka komposisi bahan dan target di dokumen ini adalah
-> **angka hipotetis untuk latihan**, bukan resep produk sungguhan. Formulasi
-> nyata memerlukan data analisis laboratorium setiap lot bahan, uji stabilitas,
-> uji sensori, dan kepatuhan terhadap regulasi BPOM.
+> **Penting:** Semua angka komposisi bahan dan target di dokumen ini
+> adalah **angka hipotetis untuk latihan**, bukan resep produk
+> sungguhan. Formulasi nyata memerlukan data analisis laboratorium
+> setiap lot bahan, uji stabilitas, uji sensori, dan kepatuhan terhadap
+> regulasi BPOM.
 
-**Cara pakai:** jalankan setiap *chunk* secara berurutan (tombol ▶ di RStudio),
-baca penjelasannya, lalu cocokkan hasilnya dengan hitungan manual di kertas.
-Dokumen ini hanya memakai R dasar dan paket `knitr`.
+**Cara pakai:** jalankan setiap *chunk* secara berurutan (tombol ▶ di
+RStudio), baca penjelasannya, lalu cocokkan hasilnya dengan hitungan
+manual di kertas. Dokumen ini hanya memakai *library base* R dan
+*library* `knitr`.
 
-# Langkah 0: Data bahan dan target
+## Langkah 0: Data bahan dan target
 
-## Komposisi bahan
+### Komposisi bahan
 
-Semua angka dalam **gram per 100 g bahan, basis basah (*as-is*)**, kecuali
-dinyatakan lain. Ini sama seperti tabel komposisi di slide (jagung 8,8% CP,
-dsb.).
+Masukkan semua angka dalam **gram per 100 g bahan, basis basah**,
+kecuali dinyatakan lain. Dalam contoh kasus ini, susu bubuk ibu hamil
+yang akan dibuat menggunakan 7 buah bahan sesuai dengan data `nama`.
 
 ```{r bahan}
 bahan <- data.frame(
@@ -63,24 +71,25 @@ rownames(bahan) <- bahan$kode
 bahan
 ```
 
-Penjelasan singkat tiap bahan dan padanannya di contoh pakan babi:
+Penjelasan singkat tiap bahan:
 
-| Bahan susu ibu hamil | Peran | Padanan di contoh pakan babi |
-|---|---|---|
-| Susu skim bubuk | Sumber protein utama (dan kalsium) | *Soybean meal* (SBM) |
-| Maltodekstrin | Sumber energi, **bahan "pengisi/penyesuai"** | Jagung (*corn*) |
-| Bubuk lemak nabati | Sumber lemak | (tidak ada di contoh babi) |
-| Kalsium karbonat | Sumber kalsium murni | *Limestone* (Lime) |
-| FOS-inulin, bubuk DHA, premix | **Bahan tetap** dengan jumlah yang sudah diputuskan | Alfalfa 5%, garam, premix TM & Vit |
+| Bahan susu ibu hamil | Peran |
+|------------------------|-----------------------------------------------|
+| Susu skim bubuk | Sumber protein utama (dan kalsium) |
+| Maltodekstrin | Sumber energi dan sebagai **bahan "pengisi/penyesuai"** |
+| Bubuk lemak nabati | Sumber lemak |
+| Kalsium karbonat | Sumber kalsium murni |
+| FOS-inulin, bubuk DHA, premix | **Bahan tetap** dengan jumlah yang sudah diputuskan |
 
-Maltodekstrin berperan seperti jagung di contoh babi: setiap kali bahan lain
-ditambah, **maltodekstrin yang dikurangi** supaya total tetap 100 g.
+Maltodekstrin berperan seperti jagung pada pakan babi: setiap kali bahan
+lain ditambah, **maltodekstrin yang dikurangi** supaya total tetap 100
+g.
 
-Asumsi yang sama seperti di buku: **premix dianggap tidak menyumbang protein,
-lemak, maupun kalsium** (kontribusinya terlalu kecil). Isi premix dirancang
-terpisah di bagian terakhir.
+Asumsi yang sama seperti di buku: **premix dianggap tidak menyumbang
+protein, lemak, maupun kalsium** (kontribusinya terlalu kecil). Isi
+premix dirancang terpisah di bagian terakhir.
 
-## Target spesifikasi
+### Target spesifikasi
 
 Target per **100 g bubuk** (basis basah):
 
@@ -91,7 +100,7 @@ target <- c(protein = 22,   # g/100 g
 target
 ```
 
-## Bahan tetap (*fixed ingredients*)
+### Bahan tetap (*fixed ingredients*)
 
 ```{r fixed}
 tetap <- c(fos = 3, dha = 1, premix = 1)   # g per 100 g formula
@@ -99,13 +108,12 @@ sisa  <- 100 - sum(tetap)
 sisa
 ```
 
-**Maksudnya:** jumlah FOS-inulin, bubuk DHA, dan premix sudah diputuskan di awal
-(misalnya berdasarkan dosis prebiotik dan target DHA). Jadi hanya
-**`r sisa` g** yang tersisa untuk dibagi ke susu skim, maltodekstrin, bubuk
-lemak, dan kalsium karbonat. Di contoh babi, ini sama dengan
-"100% − 5% alfalfa − 1,6% garam & premix = 93,4".
+**Maksudnya:** jumlah FOS-inulin, bubuk DHA, dan premix sudah diputuskan
+di awal (misalnya berdasarkan dosis prebiotik dan target DHA). Jadi
+hanya **`r sisa` g** yang tersisa untuk dibagi ke susu skim,
+maltodekstrin, bubuk lemak, dan kalsium karbonat.
 
-## Fungsi bantu: menghitung isi gizi sebuah resep
+Fungsi untuk menghitung isi gizi sebuah resep
 
 ```{r fungsi-hitung}
 # resep: vektor bernama, satuan g bahan per 100 g formula
@@ -115,16 +123,17 @@ hitung_gizi <- function(resep, kolom = c("air", "protein", "lemak", "karbo", "se
 }
 ```
 
-**Maksudnya:** untuk setiap zat gizi, kontribusi sebuah bahan =
-*jumlah bahan × kadar zat gizi bahan ÷ 100*. Semua kontribusi lalu dijumlahkan.
-Ini sama persis dengan baris *Check* di slide, misalnya
-`0.088 (81.688) + 0.509 (11.712) + ...`.
+**Maksudnya:** untuk setiap zat gizi, kontribusi sebuah bahan = *jumlah
+bahan × kadar zat gizi bahan ÷ 100*. Semua kontribusi lalu dijumlahkan.
 
-# Langkah 1: Seimbangkan protein
+## Langkah 1: Seimbangkan protein
 
-Mula-mula hanya susu skim (x) dan maltodekstrin (sisanya) yang dipakai.
+Pertama-tama, hitung kebutuhan susu skim (x) dan maltodekstrin yang akan
+dipakai untuk susu ibu hamil. Jika 22 gram protein yang dikehendaki,
+dari DHA dengan kandungan 10% protein dan skim dengan kandungan 34%,
+maka sisa malto yang dibutuhkan dapat dihitung dengan persamaan ini.
 
-$$\underbrace{0{,}10(1)}_{\text{DHA}} + \underbrace{0{,}34\,x}_{\text{skim}} + \underbrace{0\,(`r sisa` - x)}_{\text{malto}} = 22$$
+$$\underbrace{0{,}10(1)}_{\text{DHA}} + \underbrace{0{,}34\,x}_{\text{skim}} + \underbrace{0\,(95- x)}_{\text{malto}} = 22$$
 
 ```{r step1}
 protein_tetap <- 0.10 * tetap["dha"]              # protein dari bahan tetap
@@ -136,18 +145,16 @@ round(resep1, 3)
 round(hitung_gizi(resep1), 3)
 ```
 
-**Maksudnya:** protein diseimbangkan pertama karena susu skim adalah bahan
-dengan porsi terbesar dan protein adalah zat gizi "utama" (di pakan ternak,
-protein juga yang paling mahal). Maltodekstrin tidak mengandung protein,
-sehingga persamaannya jadi sangat sederhana.
+**Maksudnya:** protein diseimbangkan pertama karena susu skim adalah
+bahan dengan porsi terbesar dan protein adalah zat gizi utama.
+Maltodekstrin tidak mengandung protein, sehingga persamaannya jadi
+sangat sederhana.
 
-Hasil *check*: protein tepat **22 g**, tetapi lemak dan kalsium belum mencapai
-target. Itu memang belum diurus.
+Hasil *check*: skim yang dibutuhkan adalah 64.412 g dengan maltodektrin
+sebanyak 30.588 g untuk mencapai protein **22 g**. Meskipun demikian,
+lemak dan kalsium masih belum mencapai target.
 
-### Sampingan: cek dengan Pearson Square
-
-Untuk porsi `r sisa` g yang dibagi antara susu skim dan maltodekstrin,
-kadar protein yang dibutuhkan campuran keduanya adalah:
+#### Sampingan: cek dengan Pearson Square
 
 ```{r pearson}
 kadar_perlu <- (target["protein"] - protein_tetap) / sisa * 100   # % protein campuran
@@ -158,10 +165,10 @@ c(kadar_perlu = unname(kadar_perlu),
   malto_g = unname(bagian_malto / (bagian_skim + bagian_malto) * sisa))
 ```
 
-Hasilnya sama dengan langkah 1. Artinya, aljabar satu variabel dan Pearson
-Square hanyalah dua cara menulis perhitungan yang sama.
+Hasilnya sama dengan langkah 1. Artinya, aljabar satu variabel dan
+Pearson Square hanyalah dua cara menulis perhitungan yang sama.
 
-# Langkah 2: Seimbangkan lemak
+## Langkah 2: Seimbangkan lemak
 
 Bubuk lemak (y) ditambahkan dan **maltodekstrin dikurangi** sebanyak y.
 
@@ -178,13 +185,13 @@ round(resep2, 3)
 round(hitung_gizi(resep2), 3)
 ```
 
-**Maksudnya:** susu skim dan bubuk DHA sudah menyumbang sedikit lemak, jadi
-bubuk lemak hanya perlu menutup **kekurangannya**. Perhatikan hasil *check*:
-lemak sudah tepat 8, tetapi **protein naik sedikit di atas 22**, karena bubuk
-lemak juga mengandung 3% protein (dari kaseinat pembawanya). Ini akan
-dikoreksi di langkah 4.
+**Maksudnya:** susu skim dan bubuk DHA sudah menyumbang sedikit lemak,
+jadi bubuk lemak hanya perlu menutup **kekurangannya**. Perhatikan hasil
+*check*: lemak sudah tepat 8, tetapi **protein naik sedikit di atas
+22**, karena bubuk lemak juga mengandung 3% protein (dari kaseinat
+pembawanya). Ini akan dikoreksi di langkah 4.
 
-# Langkah 3: Seimbangkan kalsium
+## Langkah 3: Seimbangkan kalsium
 
 Kalsium karbonat (z) ditambahkan dan maltodekstrin dikurangi lagi.
 
@@ -204,15 +211,15 @@ round(hitung_gizi(resep3), 4)
 **Maksudnya:** kalsium diseimbangkan **terakhir** dengan bahan yang
 **hanya mengandung kalsium**. Dengan begitu, penambahan CaCO₃ tidak
 mengganggu protein dan lemak yang sudah pas. Di contoh babi, urutannya
-fosfor dulu (Dical) baru kalsium (Lime), karena Dical mengandung P **dan** Ca
-sehingga ikut menyumbang Ca. Di contoh ini tidak ada bahan yang menyumbang
-keduanya, jadi cukup satu langkah untuk mineral.
+fosfor dulu (Dical) baru kalsium (Lime), karena Dical mengandung P
+**dan** Ca sehingga ikut menyumbang Ca. Di contoh ini tidak ada bahan
+yang menyumbang keduanya, jadi cukup satu langkah untuk mineral.
 
-# Langkah 4: Seimbangkan ulang protein
+## Langkah 4: Seimbangkan ulang protein
 
-Sekarang jumlah bubuk lemak dan CaCO₃ sudah "dikunci". Protein dihitung ulang
-dengan memperhitungkan protein dari bubuk lemak. Ruang untuk susu skim +
-maltodekstrin menjadi lebih kecil:
+Sekarang jumlah bubuk lemak dan CaCO₃ sudah "dikunci". Protein dihitung
+ulang dengan memperhitungkan protein dari bubuk lemak. Ruang untuk susu
+skim + maltodekstrin menjadi lebih kecil:
 
 ```{r step4}
 ruang <- sisa - resep3["lemak"] - resep3["caco3"]
@@ -225,10 +232,7 @@ resep4 <- c(skim = unname(skim), malto = unname(malto),
 round(resep4, 3)
 ```
 
-**Maksudnya:** langkah ini sama dengan *Step 4* di slide
-("SBM = x & Corn = 92,16 − x"). Protein kembali tepat 22 g.
-
-# Cek akhir: kenapa lemak dan kalsium sedikit meleset?
+## Cek akhir: kenapa lemak dan kalsium sedikit meleset?
 
 ```{r cek4}
 cek <- function(resep) {
@@ -240,16 +244,18 @@ cek <- function(resep) {
 cek(resep4)
 ```
 
-Di langkah 4, susu skim **berkurang sedikit**. Susu skim juga membawa lemak
-dan kalsium, jadi lemak dan kalsium ikut turun sedikit di bawah target.
+Di langkah 4, susu skim **berkurang sedikit**. Susu skim juga membawa
+lemak dan kalsium, jadi lemak dan kalsium ikut turun sedikit di bawah
+target.
 
-Ini keterbatasan metode bertahap: **setiap koreksi mengganggu zat gizi lain
-yang sudah pas**. Di buku Chiba, selisih kecil seperti ini biasanya dibiarkan
-karena masih dalam batas toleransi. Ada dua cara untuk mendapatkan jawaban
-yang tepat: mengulang langkah 1–4 sampai stabil (iterasi), atau
-menyelesaikan semuanya sekaligus sebagai sistem persamaan.
+Ini keterbatasan metode bertahap: **setiap koreksi mengganggu zat gizi
+lain yang sudah pas**. Di buku Chiba, selisih kecil seperti ini biasanya
+dibiarkan karena masih dalam batas toleransi. Ada dua cara untuk
+mendapatkan jawaban yang tepat: mengulang langkah 1–4 sampai stabil
+(iterasi), atau menyelesaikan semuanya sekaligus sebagai sistem
+persamaan.
 
-## Cara A: iterasi (ulangi langkah sampai stabil)
+### Cara A: iterasi (ulangi langkah sampai stabil)
 
 ```{r iterasi}
 iterasi <- function(maks = 50, toleransi = 1e-8) {
@@ -277,17 +283,18 @@ cek(hasil_iterasi$resep)
 ```
 
 **Maksudnya:** langkah protein → lemak → kalsium diulang terus. Karena
-pengaruh silangnya kecil, hasilnya cepat stabil dalam beberapa putaran saja,
-dan semua target tercapai tepat.
+pengaruh silangnya kecil, hasilnya cepat stabil dalam beberapa putaran
+saja, dan semua target tercapai tepat.
 
-## Cara B: selesaikan sekaligus sebagai sistem persamaan linear
+### Cara B: selesaikan sekaligus sebagai sistem persamaan linear
 
-Ada 4 bahan yang belum diketahui (skim, malto, lemak, CaCO₃) dan 4 syarat:
+Ada 4 bahan yang belum diketahui (skim, malto, lemak, CaCO₃) dan 4
+syarat:
 
-1. Total keempatnya = `r sisa` g
-2. Protein total = 22 g
-3. Lemak total = 8 g
-4. Kalsium total = 1,1 g
+1.  Total keempatnya = `r sisa` g
+2.  Protein total = 22 g
+3.  Lemak total = 8 g
+4.  Kalsium total = 1,1 g
 
 Empat persamaan dengan empat variabel bisa diselesaikan langsung dengan
 aljabar matriks (**A · x = b**):
@@ -315,12 +322,14 @@ cek(resep_final)
 (koefisien 1 untuk setiap bahan). Baris berikutnya adalah kadar protein,
 lemak, dan Ca setiap bahan (dalam desimal). Vektor **b** adalah target
 dikurangi sumbangan bahan tetap. Hasilnya **sama dengan cara iterasi**.
-Metode bertahap di slide sebenarnya adalah cara manual untuk menyelesaikan
-sistem persamaan ini. Software formulasi (termasuk Excel Solver) mengerjakan
-hal yang sama, dan biasanya ditambah tujuan meminimalkan harga
-(*linear programming*).
+Metode bertahap di slide sebenarnya adalah cara manual untuk
+menyelesaikan sistem persamaan ini. Software formulasi (seperti Excel
+Solver) dapat mengerjakan hal yang sama, dan biasanya ditambah tujuan
+untuk meminimalkan harga (*linear programming*). Lakukan dengan Excel
+Solver pada file `formulasi_susu_ibu_hamil.xlsx` dan bandingkan
+hasilnya.
 
-# Resep akhir dan nilai gizi lengkap
+## Resep akhir dan nilai gizi lengkap
 
 ```{r resep-akhir}
 resep_tabel <- data.frame(
@@ -343,11 +352,12 @@ data.frame(
 )
 ```
 
-**Maksudnya:** energi dihitung dengan faktor Atwater (protein dan karbohidrat
-4 kkal/g, lemak 9 kkal/g). FOS-inulin dihitung 2 kkal/g karena hanya sebagian
-energinya diperoleh lewat fermentasi di usus besar.
+**Maksudnya:** energi dihitung dengan faktor Atwater (protein dan
+karbohidrat 4 kkal/g, lemak 9 kkal/g). FOS-inulin dihitung 2 kkal/g
+karena hanya sebagian energinya diperoleh lewat fermentasi di usus
+besar.
 
-## Konversi ke basis kering
+### Konversi ke basis kering
 
 ```{r basis-kering}
 BK <- 100 - gizi["air"]                  # % bahan kering formula
@@ -357,16 +367,16 @@ round(rbind(basis_basah = gizi[c("protein", "lemak", "Ca")],
             basis_kering = gizi_bk), 3)
 ```
 
-**Maksudnya:** susu bubuk sangat kering (bahan kering ±96%), jadi basis basah
-dan basis kering hanya sedikit berbeda. Inilah alasan asumsi **90% bahan
-kering** dari formulasi pakan **tidak cocok** untuk susu bubuk: kadar air
-sebaiknya diukur langsung. Sesuai *rule of thumb*, dari basis basah ke basis
-kering **kadar zat gizi naik**.
+**Maksudnya:** susu bubuk sangat kering (bahan kering ±96%), jadi basis
+basah dan basis kering hanya sedikit berbeda. Inilah alasan asumsi **90%
+bahan kering** dari formulasi pakan **tidak cocok** untuk susu bubuk:
+kadar air sebaiknya diukur langsung. Sesuai *rule of thumb*, dari basis
+basah ke basis kering **kadar zat gizi naik**.
 
-# Takaran saji
+## Takaran saji
 
-Misalkan satu takaran saji adalah **45 g bubuk** (dilarutkan dalam ±200 mL air),
-diminum **2 kali sehari**.
+Misalkan satu takaran saji adalah **45 g bubuk** (dilarutkan dalam ±200
+mL air), diminum **2 kali sehari**.
 
 ```{r takaran}
 saji_g <- 45
@@ -377,13 +387,13 @@ round(per_saji, 1)
 round(per_saji * 2, 1)   # per hari (2 saji)
 ```
 
-**Maksudnya:** angka ini dibandingkan dengan **Angka Kecukupan Gizi (AKG)
-ibu hamil** untuk melihat berapa persen kebutuhan yang dipenuhi formula.
-Gunakan tabel AKG terbaru (Permenkes No. 28 Tahun 2019) sesuai trimester.
-Formula ibu hamil dirancang sebagai **pelengkap**, bukan untuk memenuhi 100%
-kebutuhan.
+**Maksudnya:** angka ini dibandingkan dengan **Angka Kecukupan Gizi
+(AKG) ibu hamil** untuk melihat berapa persen kebutuhan yang dipenuhi
+formula. Gunakan tabel AKG terbaru (Permenkes No. 28 Tahun 2019) sesuai
+trimester. Formula ibu hamil dirancang sebagai **pelengkap**, bukan
+untuk memenuhi 100% kebutuhan.
 
-# Merancang premix vitamin-mineral
+## Merancang premix vitamin-mineral
 
 Premix sudah "dipesan" 1 g per 100 g formula. Sekarang isinya dirancang,
 mengikuti bagian *Formulating a TM or Vit premix* di buku Chiba:
@@ -422,49 +432,51 @@ c(carrier_maltodekstrin_g = unname(carrier),
 
 **Maksudnya:**
 
-- **Kemurnian sumber.** Kita tidak menambahkan "besi murni", melainkan senyawa
-  seperti fero fumarat, yang hanya mengandung ±32,9% Fe. Jadi bahan sumber
-  yang dibutuhkan = kebutuhan zat ÷ kadar zat dalam sumber.
-- ***Overage*.** Vitamin seperti asam folat dan vitamin D bisa rusak selama
-  pengolahan dan penyimpanan, sehingga industri biasanya menambahkan lebih
-  (di sini dimisalkan 20%) agar kadar di akhir masa simpan tetap memenuhi label.
-  Mineral stabil, jadi tidak perlu *overage*.
-- ***Carrier*.** Semua bahan aktif hanya berbobot kecil, jadi sisanya diisi
-  maltodekstrin supaya premix bisa ditimbang dan dicampur merata. Ini sama
-  dengan poin "use a carrier" di buku.
-- Vitamin A **sengaja tidak dimasukkan** dalam bentuk retinol, karena asupan
-  retinol berlebih saat hamil berisiko teratogenik. Kalau ingin ditambahkan,
-  lebih aman dalam bentuk beta-karoten.
+- **Kemurnian sumber.** Kita tidak menambahkan "besi murni", melainkan
+  senyawa seperti fero fumarat, yang hanya mengandung ±32,9% Fe. Jadi
+  bahan sumber yang dibutuhkan = kebutuhan zat ÷ kadar zat dalam sumber.
+- ***Overage*****.** Vitamin seperti asam folat dan vitamin D bisa rusak
+  selama pengolahan dan penyimpanan, sehingga industri biasanya
+  menambahkan lebih (di sini dimisalkan 20%) agar kadar di akhir masa
+  simpan tetap memenuhi label. Mineral stabil, jadi tidak perlu
+  *overage*.
+- ***Carrier*****.** Semua bahan aktif hanya berbobot kecil, jadi
+  sisanya diisi maltodekstrin supaya premix bisa ditimbang dan dicampur
+  merata. Ini sama dengan poin "use a carrier" di buku.
+- Vitamin A **sengaja tidak dimasukkan** dalam bentuk retinol, karena
+  asupan retinol berlebih saat hamil berisiko teratogenik. Kalau ingin
+  ditambahkan, lebih aman dalam bentuk beta-karoten.
 
-# Latihan untuk mahasiswa
+## Latihan untuk mahasiswa
 
-1. Ubah target protein menjadi **25 g/100 g**. Jalankan ulang semua *chunk*.
-   Bahan apa yang naik dan apa yang turun? Kenapa?
-2. Ganti susu skim dengan **isolat protein kedelai** (misalnya protein 88%,
-   lemak 1%, Ca 0,2%). Apa yang terjadi pada kebutuhan CaCO₃? Jelaskan.
-3. Hitung ulang **langkah 1** secara manual dengan Pearson Square, lalu
-   bandingkan dengan hasil R.
-4. Tambahkan syarat baru: karbohidrat total **tidak boleh lebih dari 55 g/100 g**.
-   Apakah masih bisa diselesaikan dengan 4 bahan yang ada? Bahan apa yang
-   perlu ditambahkan?
-5. Tambahkan kolom **harga per kg** ke data bahan, lalu hitung biaya bahan
-   per kg formula. Diskusikan: bagaimana jika ingin formula termurah yang tetap
-   memenuhi semua target?
+1.  Ubah target protein menjadi **25 g/100 g**. Jalankan ulang semua
+    *chunk*. Bahan apa yang naik dan apa yang turun? Kenapa?
+2.  Ganti susu skim dengan **isolat protein kedelai** (misalnya protein
+    88%, lemak 1%, Ca 0,2%). Apa yang terjadi pada kebutuhan CaCO₃?
+    Jelaskan.
+3.  Hitung ulang **langkah 1** secara manual dengan Pearson Square, lalu
+    bandingkan dengan hasil R.
+4.  Tambahkan syarat baru: karbohidrat total **tidak boleh lebih dari 55
+    g/100 g**. Apakah masih bisa diselesaikan dengan 4 bahan yang ada?
+    Bahan apa yang perlu ditambahkan?
+5.  Tambahkan kolom **harga per kg** ke data bahan, lalu hitung biaya
+    bahan per kg formula. Diskusikan: bagaimana jika ingin formula
+    termurah yang tetap memenuhi semua target?
 
-# Keterbatasan pendekatan ini
+## Keterbatasan pendekatan ini
 
 - Pendekatan ini hanya menjamin **angka gizi di atas kertas**. Formula
-  sungguhan juga harus mempertimbangkan kelarutan, rasa, aroma, stabilitas
-  oksidatif (terutama DHA), dan interaksi antar-zat (misalnya kalsium
-  menghambat penyerapan besi).
-- Komposisi bahan harus berasal dari **analisis laboratorium tiap lot**, bukan
-  angka tabel.
-- Batas atas zat gizi (misalnya retinol dan yodium) sama pentingnya dengan
-  batas bawah.
-- Produk akhir harus memenuhi **regulasi BPOM** untuk pangan olahan keperluan
-  gizi khusus, termasuk batas cemaran dan persyaratan label.
+  sungguhan juga harus mempertimbangkan kelarutan, rasa, aroma,
+  stabilitas oksidatif (terutama DHA), dan interaksi antar-zat (misalnya
+  kalsium menghambat penyerapan besi).
+- Komposisi bahan harus berasal dari **analisis laboratorium tiap lot**,
+  bukan angka tabel.
+- Batas atas zat gizi (misalnya retinol dan yodium) sama pentingnya
+  dengan batas bawah.
+- Produk akhir harus memenuhi **regulasi BPOM** untuk pangan olahan
+  keperluan gizi khusus, termasuk batas cemaran dan persyaratan label.
 
-# Rujukan
+## Rujukan
 
 Chiba, L. I. (2009). *Animal Nutrition Handbook*, Section 18: Diet
 Formulation & Feed Ingredients (hlm. 481–491). Auburn University.

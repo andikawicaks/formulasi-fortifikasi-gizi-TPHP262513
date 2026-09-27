@@ -3,8 +3,8 @@ project:
   output-dir: _book
 
 book:
-  title: "Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap"
-  subtitle: "Diadaptasi dari metode formulasi pakan (Chiba, *Animal Nutrition Handbook*, Section 18)"
+  title: "Formulasi dan Fortifikasi Gizi"
+  subtitle: "Petunjuk Tambahan"
   author: "Andika Wicaksono Putro"
   date: today
   search: true
@@ -13,6 +13,7 @@ book:
   sidebar:
     style: docked
   chapters:
+    - index.qmd
     - formulasi_susu_ibu_hamil.Rmd
 
 lang: id
