@@ -74,7 +74,7 @@ bahan
 Penjelasan singkat tiap bahan:
 
 | Bahan susu ibu hamil | Peran |
-|----|----|
+|------------------------------------|------------------------------------|
 | Susu skim bubuk | Sumber protein utama (dan kalsium) |
 | Maltodekstrin | Sumber energi dan sebagai **bahan "pengisi/penyesuai"** |
 | Bubuk lemak nabati | Sumber lemak |
@@ -462,6 +462,9 @@ c(carrier_maltodekstrin_g = unname(carrier),
 5.  Tambahkan kolom **harga per kg** ke data bahan, lalu hitung biaya
     bahan per kg formula. Diskusikan: bagaimana jika ingin formula
     termurah yang tetap memenuhi semua target?
+6.  Jalankan formula yang lebih kompleks dengan 13 bahan baku dengan 12
+    komponen yang diatur pada file
+    `formulasi_susu_ibu_hamil_kompleks.xlsx`
 
 ## Keterbatasan pendekatan ini
 
