@@ -1,0 +1,31 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Formulasi Susu Ibu Hamil: Pendekatan *Complete Diet* Bertahap"
+  subtitle: "Diadaptasi dari metode formulasi pakan (Chiba, *Animal Nutrition Handbook*, Section 18)"
+  author: "Andika Wicaksono Putro"
+  date: today
+  search: true
+  repo-url: https://github.com/andikawicaks/formulasi-fortifikasi-gizi-TPHP262513
+  repo-actions: [source, issue]
+  sidebar:
+    style: docked
+  chapters:
+    - formulasi_susu_ibu_hamil.Rmd
+
+lang: id
+
+execute:
+  freeze: auto
+  warning: false
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-title: "Isi halaman"
+    code-copy: true
+    code-overflow: wrap
+    df-print: paged
