@@ -1,5 +1,5 @@
 # Pendahuluan {.unnumbered}
 
-Petunjuk ini berisi contoh formulasi susu ibu hamil dengan pendekatan *complete diet* bertahap sebagai bahan komplementer untuk pertemuan mengenai Makanan Formula untuk ibu Hamil dan Menyusui & Pedoman makanan Formula WHO. Formula ini diadaptasi dari metode formulasi pakan (Chiba, *Animal Nutrition Handbook*, Section 18). Book chapter dapat diakses pada [link ini](https://ndl.ethernet.edu.et/server/api/core/bitstreams/efb177e6-d9ef-40f2-afbb-379b5be32ae9/content).
+Petunjuk ini berisi contoh formulasi susu ibu hamil dengan pendekatan *complete diet* bertahap sebagai bahan komplementer untuk pertemuan mengenai Makanan Formula untuk ibu Hamil dan Menyusui & Pedoman makanan Formula WHO. Formula ini diadaptasi dari metode formulasi pakan (Chiba, *Animal Nutrition Handbook*, Section 18). Book chapter dapat diakses pada [link ini](https://ndl.ethernet.edu.et/server/api/core/bitstreams/efb177e6-d9ef-40f2-afbb-379b5be32ae9/content). Data dapat diakses pada [Github](https://github.com/andikawicaks/formulasi-fortifikasi-gizi-TPHP262513).
 
 Jalankan setiap *chunk* secara berurutan dan cocokkan hasilnya dengan hitungan manual.
